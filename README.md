@@ -110,6 +110,101 @@ and name NOT LIKE '% %'
 
 ## 1.3: SELECT From Nobel
 
+1.
+```sql
+SELECT yr, subject, winner
+FROM nobel
+WHERE yr = 1950
+```
+
+2.
+```sql
+SELECT winner
+FROM nobel
+WHERE yr = 1962
+AND subject = 'Literature'
+```
+
+3.
+```sql
+SELECT yr, subject FROM nobel
+where winner = 'Albert Einstein'
+```
+
+4.
+```sql
+SELECT winner FROM nobel
+WHERE subject = 'Peace' AND yr >= 2000
+```
+
+5.
+```sql
+SELECT yr, subject, winner FROM nobel
+WHERE subject = 'Literature' AND 1980 <= yr AND yr <= 1989
+```
+
+6.
+```sql
+SELECT * FROM nobel
+WHERE winner IN ('Theodore Roosevelt','Woodrow Wilson',
+'Jimmy Carter', 'Barack Obama')
+```
+
+7.
+```sql
+SELECT winner FROM nobel
+WHERE winner like 'John%'
+```
+
+8.
+```sql
+SELECT * FROM nobel
+WHERE (subject = 'Physics' AND yr = 1980) OR
+(subject = 'Chemistry' AND yr = 1984)
+```
+
+9.
+```sql
+SELECT * FROM nobel
+WHERE yr = 1980 AND subject NOT IN ('Chemistry', 'Medicine')
+```
+
+10.
+```sql
+SELECT * FROM nobel
+WHERE (subject = 'Medicine' AND yr < 1910) OR (subject = 'Literature' AND yr >= 2004)
+```
+
+11.
+```sql
+SELECT * FROM nobel
+WHERE winner = 'Peter Grünberg'
+```
+
+12.
+```sql
+SELECT * FROM nobel
+WHERE winner = 'Eugene O''neill'
+```
+
+13.
+```sql
+SELECT winner, yr, subject FROM nobel
+WHERE winner LIKE 'Sir%'
+ORDER BY yr DESC, winner ASC
+```
+
+14.
+```sql
+SELECT winner, subject 
+FROM nobel
+WHERE yr=1984
+ORDER BY (subject IN ('Physics','Chemistry')) ASC,
+subject ASC, winner ASC
+#Key Takeaway: You can use an IN clause to return a column of 0’s and 1’s, and then
+#ORDER BY this value to sort in certain ways.
+```
+
 ## 1.4: SELECT Within SELECT
 
 ## 1.5: SUM and COUNT
