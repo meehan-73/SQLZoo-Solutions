@@ -207,7 +207,149 @@ subject ASC, winner ASC
 
 ## 1.4: SELECT Within SELECT
 
+1.
+```sql
+SELECT name FROM world
+WHERE population >
+     (SELECT population FROM world
+      WHERE name='Russia')
+```
+
+2.
+```sql
+SELECT name FROM world
+WHERE continent = 'Europe' AND gdp/population >
+     (SELECT gdp/population FROM world
+     WHERE name = 'United Kingdom')
+```
+
+3.
+```sql
+SELECT name, continent FROM world
+WHERE continent IN 
+     (SELECT continent FROM world
+     WHERE name IN ('Argentina', 'Australia'))
+ORDER BY name
+```
+
+4.
+```sql
+SELECT name, population FROM world
+WHERE population >
+     (SELECT population FROM world
+     WHERE name = 'Canada')
+AND
+     population < 
+     (SELECT population FROM world
+     WHERE name = 'Poland')
+```
+
+5.
+```sql
+SELECT name, CONCAT(
+ROUND(100*population/(SELECT population FROM world
+WHERE name = 'Germany'),0), '%') as 'percentage'
+FROM world
+WHERE continent = 'Europe'
+#This problem introduces CONCAT to get the % in the answer, as well as the renaming
+#of a column via AS
+```
+
+6.
+```sql
+SELECT name FROM world
+WHERE gdp > ALL(SELECT gdp FROM world
+WHERE continent = 'Europe' AND gdp>0)
+#Exercise deals with the ALL command. Need gdp>0 to deal with null values.
+```
+
+7.
+```sql
+SELECT continent, name, area FROM world x
+  WHERE area >= ALL
+    (SELECT area FROM world y
+        WHERE y.continent=x.continent
+          AND population>0)
+#This is an example of a correlated subquery. 
+```
+
+8.
+```sql
+SELECT continent, name FROM world x
+WHERE name = (SELECT name FROM world y
+     WHERE y.continent = x.continent
+     ORDER BY name ASC
+     LIMIT 1)
+```
+
+9.
+```sql
+SELECT name, continent, population FROM world x
+WHERE 25000000 >= ALL(SELECT population FROM world y
+WHERE x.continent = y.continent)
+```
+
+10.
+```sql
+SELECT name, continent FROM world x
+WHERE population > ALL(SELECT 3*population FROM world y
+WHERE x.continent = y.continent AND x.name <> y.name)
+#Think of x temporarily fixed, and y varying.
+```
+
 ## 1.5: SUM and COUNT
+
+1.
+```sql
+SELECT SUM(population)
+FROM world
+```
+
+2.
+```sql
+SELECT DISTINCT(continent) FROM world
+```
+
+3.
+```sql
+SELECT SUM(gdp) FROM world
+WHERE continent = 'Africa'
+```
+
+4.
+```sql
+SELECT COUNT(name) FROM world
+WHERE area >= 1000000
+```
+
+5.
+```sql
+SELECT SUM(population) FROM world
+WHERE name IN ('Estonia', 'Latvia', 'Lithuania')
+```
+
+6.
+```sql
+SELECT continent, COUNT(name) FROM world
+GROUP BY continent
+#For each continent, COUNT(name) will be applied.
+```
+
+7.
+```sql
+SELECT continent, COUNT(name) FROM world
+WHERE population >= 10000000
+GROUP BY continent
+#HAVING is used when aggregate clause is needed. WHERE
+#is used otherwise.
+```
+
+8.
+```sql
+SELECT continent FROM world
+GROUP BY continent
+HAVING SUM(population) >= 100000000
+```
 
 ## 1.6: JOIN
 
