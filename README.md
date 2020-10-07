@@ -26,6 +26,88 @@ Here are my solutions to many of the problems on the SQLZoo website!
 
 ## 1.2: SELECT From World
 
+1.
+```sql
+SELECT name, continent, population FROM world
+```
+
+2.
+```sql
+SELECT name FROM world
+WHERE population >= 200000000
+```
+
+3.
+```sql
+SELECT name, gdp/population
+FROM world
+WHERE population >= 200000000
+```
+
+4.
+```sql
+SELECT name, population/1000000 FROM world
+WHERE continent = 'South America'
+```
+
+5.
+```sql
+SELECT name, population FROM world
+WHERE name IN ('France', 'Germany', 'Italy')
+```
+
+6.
+```sql
+SELECT name FROM world
+WHERE name LIKE '%United%'
+```
+
+7.
+```sql
+SELECT name, population, area FROM world
+WHERE area >= 3000000 OR population >= 250000000
+```
+
+8.
+```sql
+SELECT name, population, area FROM world
+WHERE (area >= 3000000 AND population < 250000000) OR 
+(area < 3000000 AND population >= 250000000)
+```
+
+9.
+```sql
+SELECT name, ROUND(population/1000000,2), ROUND(gdp/1000000000,2) FROM world 
+WHERE continent = 'South America'
+```
+
+10.
+```sql
+SELECT name, ROUND(gdp/population,-3) FROM world
+WHERE gdp >= 1000000000000
+```
+
+11.
+```sql
+SELECT name, capital FROM world
+WHERE LENGTH(name) = LENGTH(capital)
+```
+
+12.
+```sql
+SELECT name, capital
+FROM world
+WHERE LEFT(name, 1) = LEFT(capital,1) AND name <> capital
+```
+
+13.
+```sql
+SELECT name FROM world
+WHERE name LIKE '%a%' and name LIKE '%e%' and 
+name LIKE '%i%' and name LIKE '%o%' and name LIKE '%u%'
+and name NOT LIKE '% %'
+```
+
 ## 1.3: SELECT From Nobel
 
 ## 1.4: SELECT Within SELECT
