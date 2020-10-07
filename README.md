@@ -2,8 +2,8 @@
 
 Here are my solutions to many of the problems on the SQLZoo website!
 
-[1.0: SELECT Basics](#1.0-SELECT-Basics)
-[1.1: SELECT Name](#1.1:SELECTName)
+  [1.0: SELECT Basics](#1.0-SELECT-Basics)
+  [1.1: SELECT Name](#1.1-SELECT-Name)
   [1.2: SELECT From World](
   [1.3: SELECT From Nobel]
   [1.4: SELECT Within SELECT]
@@ -19,7 +19,7 @@ Here are my solutions to many of the problems on the SQLZoo website!
   [1.11: Tutorial Student Records]
   [1.12: Tutorial DDL]
 
-#1.0-SELECT-Basics
+#1.0: SELECT Basics
 
-# 1.1: SELECT Name
+#1.1: SELECT Name
 
