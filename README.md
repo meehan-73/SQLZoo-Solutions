@@ -19,7 +19,7 @@ Here are my solutions to many of the problems on the SQLZoo website!
   [1.11: Tutorial Student Records](#1.11-Tutorial-Student-Records)
   [1.12: Tutorial DDL](#1.12-Tutorial-DDL)
 
-# 1.0: SELECT Basics
+#1.0-select-Basics
 
 # 1.1: SELECT Name
 
