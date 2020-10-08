@@ -472,6 +472,120 @@ ORDER BY mdate,matchid,team1,team2
 
 ## 1.7: More JOIN Operations
 
+1.
+```sql
+SELECT id, title
+FROM movie
+WHERE yr = 1962
+```
+
+2.
+```sql
+SELECT yr FROM movie
+WHERE title = 'Citizen Kane'
+```
+
+3.
+```sql
+SELECT id, title, yr FROM movie
+WHERE title LIKE 'Star Trek%'
+ORDER BY yr
+```
+
+4.
+```sql
+SELECT id FROM actor
+WHERE name = 'Glenn Close'
+```
+
+5.
+```sql
+SELECT id FROM movie
+WHERE title = 'Casablanca'
+```
+
+6.
+```sql
+SELECT name FROM movie 
+JOIN casting
+ON movie.id = casting.movieid
+JOIN actor
+ON actor.id = casting.actorid
+WHERE movieid = 11768
+```
+
+7.
+```sql
+SELECT name FROM movie 
+JOIN casting
+ON movie.id = casting.movieid
+JOIN actor
+ON actor.id = casting.actorid
+WHERE movie.title = 'Alien'
+```
+
+8.
+```sql
+SELECT movie.title FROM movie 
+JOIN casting
+ON movie.id = casting.movieid
+JOIN actor
+ON actor.id = casting.actorid
+WHERE actor.name = 'Harrison Ford'
+```
+
+9.
+```sql
+SELECT movie.title FROM movie 
+JOIN casting
+ON movie.id = casting.movieid
+JOIN actor
+ON actor.id = casting.actorid
+WHERE actor.name = 'Harrison Ford' AND casting.ord > 1
+```
+
+10.
+```sql
+SELECT movie.title, actor.name FROM movie 
+JOIN casting
+ON movie.id = casting.movieid
+JOIN actor
+ON actor.id = casting.actorid
+WHERE movie.yr = 1962 AND casting.ord = 1
+```
+
+11.
+```sql
+SELECT yr,COUNT(title) FROM
+movie JOIN casting ON movie.id=movieid
+      JOIN actor   ON actorid=actor.id
+WHERE name='Rock Hudson'
+GROUP BY yr
+HAVING COUNT(title) > 2
+```
+
+12.
+```sql
+SELECT matchid, mdate, COUNT(player)
+FROM game 
+JOIN goal 
+ON matchid = id 
+WHERE (team1 = 'GER' OR team2 = 'GER') AND (teamid = 'GER')
+GROUP BY matchid, mdate
+```
+
+13.
+```sql
+SELECT mdate, team1, SUM(CASE WHEN teamid=team1 THEN 1 ELSE 0 END) as score1,
+team2, SUM(CASE WHEN teamid=team2 THEN 1 ELSE 0 END) as score2
+FROM game
+LEFT JOIN goal 
+ON matchid = id
+
+GROUP BY id, mdate, team1, team2
+ORDER BY mdate,matchid,team1,team2
+```
+
 ## 1.8: Using Null
 
 ## 1.8+: Numeric Examples
