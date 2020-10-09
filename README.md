@@ -566,24 +566,58 @@ HAVING COUNT(title) > 2
 
 12.
 ```sql
-SELECT matchid, mdate, COUNT(player)
-FROM game 
-JOIN goal 
-ON matchid = id 
-WHERE (team1 = 'GER' OR team2 = 'GER') AND (teamid = 'GER')
-GROUP BY matchid, mdate
+SELECT title, name FROM movie 
+JOIN casting
+ON (movie.id = casting.movieid AND ord = 1)
+JOIN actor
+ON actor.id = casting.actorid
+WHERE movie.id IN 
+(SELECT casting.movieid FROM casting WHERE actorid 
+IN 
+(SELECT id FROM actor WHERE name = 'Julie Andrews')
+)
+#Toughest one so far. Restudy this one.
 ```
 
 13.
 ```sql
-SELECT mdate, team1, SUM(CASE WHEN teamid=team1 THEN 1 ELSE 0 END) as score1,
-team2, SUM(CASE WHEN teamid=team2 THEN 1 ELSE 0 END) as score2
-FROM game
-LEFT JOIN goal 
-ON matchid = id
+SELECT name FROM movie 
+JOIN casting
+ON (movie.id = casting.movieid AND ord = 1)
+JOIN actor
+ON actor.id = casting.actorid
+GROUP BY name
+HAVING COUNT(name) >= 15
+```
 
-GROUP BY id, mdate, team1, team2
-ORDER BY mdate,matchid,team1,team2
+14.
+```sql
+SELECT title, COUNT(title) FROM movie 
+JOIN casting
+ON (movie.id = casting.movieid)
+JOIN actor
+ON actor.id = casting.actorid
+WHERE yr = 1978
+GROUP BY title
+ORDER BY COUNT(title) DESC, title
+```
+
+15.
+```sql
+SELECT name FROM actor
+WHERE id IN (
+
+SELECT DISTINCT(actorid) FROM casting
+WHERE actorid <> 1112 AND movieid IN (
+
+SELECT movieid FROM movie 
+JOIN casting
+ON (movie.id = casting.movieid)
+JOIN actor
+ON actor.id = casting.actorid
+WHERE name = 'Art Garfunkel')
+
+)
 ```
 
 ## 1.8: Using Null
