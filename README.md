@@ -696,6 +696,82 @@ FROM teacher
 
 ## 1.8+: Numeric Examples
 
+1.
+```sql
+SELECT a_strongly_agree
+FROM nss
+WHERE question='Q01'
+AND institution='Edinburgh Napier University'
+AND subject='(8) Computer Science'
+```
+
+2.
+```sql
+SELECT institution, subject
+FROM nss
+WHERE question='Q15'
+AND score >= 100
+```
+
+3.
+```sql
+SELECT institution,score
+FROM nss
+WHERE question='Q15'
+AND score < 50
+AND subject='(8) Computer Science'
+```
+
+4.
+```sql
+SELECT subject, SUM(response)
+FROM nss
+WHERE question ='Q22' AND (subject='(8) Computer Science' OR subject='(H) Creative Arts and Design')
+GROUP BY subject
+```
+
+5.
+```sql
+SELECT subject, SUM(response*a_strongly_agree/100)
+FROM nss
+WHERE question='Q22'
+AND (subject = '(8) Computer Science' OR subject = '(H) Creative Arts and Design')
+GROUP BY subject
+```
+
+6.
+```sql
+SELECT subject, ROUND(SUM(response * A_STRONGLY_AGREE / 100) / SUM(response) * 100)
+FROM nss
+WHERE question='Q22'
+AND (subject='(8) Computer Science' OR subject='(H) Creative Arts and Design')
+GROUP BY subject
+```
+
+7.
+```sql
+SELECT institution, ROUND(SUM((score/100)*response)/SUM(response)*100)
+FROM nss
+WHERE question='Q22'
+AND (institution LIKE '%Manchester%')
+GROUP BY institution
+```
+
+8.
+```sql
+SELECT institution, SUM(sample), (SELECT sample
+FROM nss x
+WHERE question='Q01'
+AND (institution LIKE '%Manchester%')
+AND subject = '(8) Computer Science'
+AND x.institution = y.institution)
+
+FROM nss y
+WHERE question='Q01'
+AND (institution LIKE '%Manchester%')
+GROUP BY institution
+```
+
 ## 1.9-: Window Function
 
 ## 1.9+: COVID-19
