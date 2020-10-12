@@ -770,6 +770,7 @@ FROM nss y
 WHERE question='Q01'
 AND (institution LIKE '%Manchester%')
 GROUP BY institution
+#Nifty way to fix subquery returning more than 1 row problem
 ```
 
 ## 1.9-: Window Function
