@@ -843,7 +843,177 @@ GROUP BY party
 
 ## 1.9+: COVID-19
 
+1.
+```sql
+SELECT name, DAY(whn),
+confirmed, deaths, recovered
+FROM covid
+WHERE name = 'Spain'
+AND MONTH(whn) = 3
+ORDER BY whn
+```
+
+2.
+```sql
+SELECT name, DAY(whn), confirmed,
+LAG(confirmed, 1) OVER (PARTITION BY name ORDER BY whn)
+FROM covid
+WHERE name = 'Italy'
+AND MONTH(whn) = 3
+ORDER BY whn
+```
+
+3.
+```sql
+SELECT name, DAY(whn), confirmed - LAG(confirmed, 1) OVER (PARTITION BY name ORDER BY whn)
+FROM covid
+WHERE name = 'Italy'
+AND MONTH(whn) = 3
+ORDER BY whn
+```
+
+4.
+```sql
+SELECT name, DATE_FORMAT(whn,'%Y-%m-%d'), confirmed - LAG(confirmed, 1) OVER (PARTITION BY name ORDER BY whn)
+FROM covid
+WHERE name = 'Italy'
+AND WEEKDAY(whn) = 0
+ORDER BY whn
+```
+
+5.
+```sql
+SELECT tw.name, DATE_FORMAT(tw.whn,'%Y-%m-%d'),  tw.confirmed - lw.confirmed
+FROM covid tw LEFT JOIN covid lw ON 
+DATE_ADD(lw.whn, INTERVAL 1 WEEK) = tw.whn
+AND tw.name=lw.name
+WHERE tw.name = 'Italy' AND DATE_FORMAT(tw.whn, '%w') = 1
+ORDER BY tw.whn
+```
+
+6.
+```sql
+SELECT name, confirmed, RANK() OVER (ORDER BY confirmed DESC) rc,deaths, RANK() OVER (ORDER BY deaths DESC) rc
+FROM covid
+WHERE whn = '2020-04-20'
+ORDER BY confirmed DESC
+```
+
+7.
+```sql
+SELECT world.name,ROUND(100000*confirmed/population,0), 
+RANK() OVER (ORDER BY confirmed/population ASC) rc
+FROM covid JOIN world ON covid.name=world.name
+WHERE whn = '2020-04-20' AND population > 10000000
+ORDER BY population DESC
+```
+
+8.
+```sql
+SELECT x.name, x.date, x.diff FROM
+
+(SELECT tw.name, DATE_FORMAT(tw.whn,'%Y-%m-%d') as date,  tw.confirmed - lw.confirmed as diff, RANK() OVER (PARTITION BY name ORDER BY diff DESC) as posn
+FROM covid tw LEFT JOIN covid lw ON 
+DATE_ADD(lw.whn, INTERVAL 1 DAY) = tw.whn
+AND tw.name=lw.name
+WHERE tw.confirmed - lw.confirmed >= 1000
+ORDER BY tw.whn) as x
+
+WHERE x.posn = 1
+ORDER BY x.date, x.name ASC
+#This answer appears to be right but is being marked as incorrect.
+#Might be a ordering issue.
+```
+
 ## 1.9: Self Join
+
+1.
+```sql
+select COUNT(id) FROM stops
+```
+
+2.
+```sql
+SELECT id FROM stops
+WHERE name = 'Craiglockhart'
+```
+
+3.
+```sql
+SELECT id, name FROM 
+route 
+JOIN 
+stops
+ON
+stop = id
+WHERE company = 'LRT' AND num = 4
+```
+
+4.
+```sql
+SELECT company, num, COUNT(*)
+FROM route WHERE stop=149 OR stop=53
+GROUP BY company, num
+HAVING COUNT(*) = 2
+```
+
+5.
+```sql
+SELECT a.company, a.num, a.stop, b.stop
+FROM route a JOIN route b ON
+(a.company=b.company AND a.num=b.num)
+WHERE a.stop=53 AND b.stop = 149
+```
+
+6.
+```sql
+SELECT a.company, a.num, stopa.name, stopb.name
+FROM route a JOIN route b ON
+(a.company=b.company AND a.num=b.num)
+JOIN stops stopa ON (a.stop=stopa.id)
+JOIN stops stopb ON (b.stop=stopb.id)
+WHERE stopa.name='Craiglockhart' AND stopb.name = 'London Road'
+```
+
+7.
+```sql
+SELECT DISTINCT R1.company, R1.num FROM route R1, route R2
+WHERE R1.num=R2.num AND R1.company=R2.company
+AND R2.stop = 137 AND R1.stop = 115
+```
+
+8.
+```sql
+SELECT R1.company, R1.num FROM route R1, route R2
+WHERE R1.num=R2.num AND R1.company=R2.company
+AND R1.stop = 53 AND R2.stop = 230
+```
+
+9.
+```sql
+SELECT name, company, num FROM 
+
+(SELECT R1.company, R1.num, R2.stop as end FROM route R1, route R2
+WHERE R1.num=R2.num AND R1.company=R2.company
+AND R1.stop = 53) as x
+JOIN
+stops
+ON stops.id = x.end
+```
+
+10.
+```sql
+SELECT DISTINCT a.num, a.company, stopb.name , c.num, c.company
+FROM route a JOIN route b
+ON (a.company = b.company AND a.num = b.num)
+JOIN ( route c JOIN route d ON (c.company = d.company AND c.num= d.num))
+JOIN stops stopa ON (a.stop = stopa.id)
+JOIN stops stopb ON (b.stop = stopb.id)
+JOIN stops stopc ON (c.stop = stopc.id)
+JOIN stops stopd ON (d.stop = stopd.id)
+WHERE  stopa.name = 'Craiglockhart' AND stopd.name = 'Sighthill' AND  stopb.name = stopc.name
+ORDER BY LENGTH(a.num), b.num, stopb.id, LENGTH(c.num), d.num
+```
 
 ## 1.10: Tutorial Quizzes
 
